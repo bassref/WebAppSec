@@ -122,14 +122,14 @@ $errorList = "";
         $userIns = "INSERT INTO user(userName, password, profileID) VALUES ('$username', '$hashed_password', NULL)";
 
         $purchIns = "INSERT INTO purchasedetails(itemID, purchaseDate, serialNumber, itemUse, networkOS, profileID, comment)
-        VALUES(NULL,'$purDate','$serNum','$usedFor','$arr',NULL,'$comments')";
+        VALUES(NULL,'$purDate','$serNum','$usedFor','$checkboxValues',NULL,'$comments')";
 
         if($con->query($sql) === TRUE){
-			$to      = 'thesols@hotmail.com';
-			$subject = 'You have much to learn, my old Padawan';
+			$to      = $email;
+			$subject = 'You made an account!';
 			$message = 'You have come this far, and still you understand nothing.';
 			$headers = 'From: thesols@lunasol.xyz' . "\r\n" .
-			'Reply-To: thesols@lunasol.xyz' . "\r\n" .
+			'Reply-To: rephie0000@gmail.com' . "\r\n" .
 			'X-Mailer: PHP/' . phpversion();
 
 			$em = mail($to, $subject, $message, $headers); 
@@ -304,8 +304,10 @@ $errorList = "";
                     <!--HTML for the second section with input text boxes-->
                     <label for=itemPurchased>Item Purchased</label>
                     <select name="itemPurchased" id="itemPurchased" width="300" style="width: 120px" >
-                        <option value="one">&nbsp;</option>
-                        <option value="two">&nbsp;</option>
+                        <option value="one">Printer</option>
+                        <option value="two">Monitor</option>
+                        <option value="two">Creative Software</option>
+                        <option value="two">3D Printer</option>
                     </select>
 
                     <label for="purDate">Purchase Date</label>
