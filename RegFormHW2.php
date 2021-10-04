@@ -44,8 +44,8 @@ $errorList = "";
                 $fname = trim($_POST['fname']);
                 $lname = trim($_POST['lname']);
             }
-            echo $errorList;
-            echo $fname;
+/*             echo $errorList;
+            echo $fname; */
 
             if(!empty($_POST['address1']))
             {
@@ -125,7 +125,16 @@ $errorList = "";
         VALUES(NULL,'$purDate','$serNum','$usedFor','$arr',NULL,'$comments')";
 
         if($con->query($sql) === TRUE){
-            echo " successful";
+			$to      = 'thesols@hotmail.com';
+			$subject = 'You have much to learn, my old Padawan';
+			$message = 'You have come this far, and still you understand nothing.';
+			$headers = 'From: thesols@lunasol.xyz' . "\r\n" .
+			'Reply-To: thesols@lunasol.xyz' . "\r\n" .
+			'X-Mailer: PHP/' . phpversion();
+
+			$em = mail($to, $subject, $message, $headers); 
+			echo "Email sent.";
+			//echo " {$em}";
         }
         if($con->query($sql)===FALSE){
             echo "Unsuccessful. Try again later.";

@@ -2,7 +2,7 @@
     session_start();
     //page to show all users
     include "config.php";
-    $result = mysqli_query($con,"SELECT firstname, lastname FROM userprofile");
+    $result = mysqli_query($con,"SELECT firstname, lastname, profileID FROM userprofile");
 
 ?>
 <!DOCTYPE html>
@@ -39,14 +39,15 @@
                     <td><?php echo $row['firstname']; ?></td>
                     <td><?php echo $row['lastname']; ?></td>
                     <input type="hidden" name="id" value="<?php echo $row['profileID']; ?>"/>
+					<form action="https://lunasol.xyz/UpdateUser.php" method="GET">
                     <td>
-                        <button id="editButton" onclick="window.location.href='UpdateUser.php';">Edit</button>
+                        <button id="editButton" name="id" type="submit" value="<?php echo $row['profileID']; ?>">Edit</button>
                         
                     </td>
                     <td>
-                        <button onclick="window.location.href='DeleteUser.php';">Delete</button>
+                        <button id="delButton" name="del" type="submit" value="<?php echo $row['profileID']; ?>">Delete</button>
                     </td>
-               
+					</form>
                 </tr>
             <?php } ?>
         </table>
