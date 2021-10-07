@@ -87,7 +87,7 @@ $errorList = "";
                 $country = filter_var($_POST['country'],FILTER_SANITIZE_STRING);
             }
     
-            $hashed_password = password_hash($password, PASSWORD_DEFAULT);
+            $hashed_password = md5($password);
             //var_dump($hashed_password);
     
             if(!empty($_POST['email']))
@@ -145,6 +145,29 @@ $errorList = "";
 ?>
 <!DOCTYPE html>
 <html>
+
+<script>
+$(document).ready(function(){
+   $("#txt_username").keyup(function(){
+      var username = $(this).val().trim();
+      if(username != ''){
+         $.ajax({
+            url: 'userCheck.php',
+            type: 'post',
+            data: {username: username},
+            success: function(response){
+                $('#user_check').html(response);
+             }
+         });
+      }else{
+         $("#user_check").html("");
+      }
+    });
+ });
+}
+</script>
+
+
     <head>
         <title>
             Registration Form
@@ -361,7 +384,8 @@ $errorList = "";
 
                         <label for="username">Username</label>
                         <input type="text" id="username" name="username" pattern="[a-zA-Z0-9]+" minlength="3" maxlength="15"><br><br>
-                        
+                        <div id="user_check" ></div>
+						
                         <label for="password">Password</label>
                         <input type="password" id="password" name="password" pattern="(?=.*\d)(?=.*[a-z])(?=.*[A-Z]).{5,}">
                         <p>"Password must contain at least one  number and one uppercase and lowercase letter, and at least 5 or more characters"</p>

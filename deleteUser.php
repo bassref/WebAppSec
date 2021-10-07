@@ -16,6 +16,6 @@ $id = $POST['profileID'];
 
 $sql = mysqli_query($con,"DELETE FROM userprofile WHERE id= $id");
 
-header("Location:LandingPage.php");
+header("Location:index.php");
 
 ?>

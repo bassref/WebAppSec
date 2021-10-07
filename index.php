@@ -36,8 +36,8 @@
 </head>
 <body>
     <div class="center">
-        <button class="button buttonAnim" onclick="window.location.href='RegFormHW2.php';">Register Customer</button>
-        <button class="button buttonAnim" onclick="window.location.href='ViewPage.php';">View All Users</button>
+        <button class="button buttonAnim" onclick="window.location.href='registration.php';">Register Customer</button>
+        <button class="button buttonAnim" onclick="window.location.href='view.php';">View All Users</button>
     </div>
 </body>
    </html>

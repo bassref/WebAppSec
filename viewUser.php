@@ -39,7 +39,7 @@
                     <td><?php echo $row['firstname']; ?></td>
                     <td><?php echo $row['lastname']; ?></td>
                     <input type="hidden" name="id" value="<?php echo $row['profileID']; ?>"/>
-					<form action="https://lunasol.xyz/UpdateUser.php" method="GET">
+					<form action="https://lunasol.xyz/updateUser.php" method="GET">
                     <td>
                         <button id="editButton" name="id" type="submit" value="<?php echo $row['profileID']; ?>">Edit</button>
                         

@@ -111,7 +111,7 @@ else {
         if($con->query($sql) === TRUE){
 			echo "Success";
 			$con->close();
-			header("Location:ViewPage.php");
+			header("Location:viewUser.php");
         }
         if($con->query($sql)===FALSE){
             echo "Unsuccessful. Try again later.";
@@ -148,13 +148,13 @@ if(isset($_GET['del'])){
 	if($con->query($sql) === TRUE){
 			echo "Success";
 			$con->close();
-			header("Location:ViewPage.php");
+			header("Location:viewUser.php");
     }
 	if($con->query($sql)===FALSE){
 		
 		echo "Unsuccessful. Try again later.";
 	}
-	header("Location:ViewPage.php");
+	header("Location:viewUser.php");
 }
 
 ?>
