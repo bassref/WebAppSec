@@ -16,10 +16,10 @@ if(isset($_POST["submit"]) && (!empty($_POST["email"]))){
         $error .= "<p>No user is registered with this email address!</p>";
         }
 }
-   if($error!=""){
-   echo "<div class='error'>".$error."</div>
-   <br /><a href='javascript:history.go(-1)'>Go Back</a>";
-   }
+    if($error!=""){
+        echo "<div class='error'>".$error."</div>
+        <br /><a href='javascript:history.go(-1)'>Go Back</a>";
+    }
     else{
         $expFormat = mktime(date("H"), date("i"), date("s"), date("m") ,date("d")+1, date("Y"));
         $expDate = date("Y-m-d H:i:s",$expFormat);

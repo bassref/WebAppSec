@@ -130,21 +130,19 @@ $errorList = "";
             $con->query($userSql);
             //echo $userSql;
             $con->query($purchSql);
-            echo $purchSql;
+            //echo $purchSql;
 			$to      = $email;
-			$subject = 'You made an account!';
+			$subject = 'You created an account!';
 			$message = 'You have come this far, and still you understand nothing.';
-			$headers = 'From: thesols@lunasol.xyz' . "\r\n" .
-			'Reply-To: rephie0000@gmail.com' . "\r\n" .
-			'X-Mailer: PHP/' . phpversion();
-
-			$em = mail($to, $subject, $message, $headers); 
-			echo "Email sent.";
-			//echo " {$em}";
+			$headers = 'From: thesols@lunasol.xyz' . "\r\n";
+			if (mail($to, $subject, $message, $headers)) {
+                echo '<p>An email has been sent to you with instructions on how to reset your password.</p><br>';
+            } 
+            else {
+                echo "Error, Email address does not exist";
+            }    
         }
-        else{
-            echo "Unsuccessful. Try again later.";
-        }
+        
         
         $con->close();
     }
@@ -368,12 +366,8 @@ $(document).ready(function(){
 
                     <label for="serNum">Serial Number</label>
                     <div class="loc">                        
-                        <?php
-                            $serNum = "SELECT serialNumber FROM products WHERE itemName='$itemPur'";
-                            //had to comment this line because if I put it in, half the form doesn't load. 
-                            //$con->query($serNum);
-                        ?>
-                       <input type='text' name='serNum' value="<?php echo $serNum['serialNumber']; ?>">                        
+                        
+                       <input type='text' name='serNum' >                        
                     </div>
                     <hr>
 
