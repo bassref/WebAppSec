@@ -4,9 +4,9 @@
 ///Homework2-->
 session_start();
 include "config.php";
-//echo '<pre>';
-//print_r($_POST);
-//echo '</pre>';
+/*echo '<pre>';
+print_r($_POST);
+echo '</pre>';*/
 
 // functions to validate the input
 if( isset( $_SESSION['counter'])) 
@@ -18,9 +18,9 @@ else {
 }
 
 
-$fname = $lname = $address1 = $address2 = $city = $zip = 
-$country = $serNum = $purDate = $itemPur = $usedFor = $state =
-$email = $username = $password = $comments = $hashed_password= $checkboxValues="";
+$fname = $lname = $address1 = $address2 = $city = $zip = $roleID =
+$country = $serNum = $purDate = $itemPur = $usedFor = $state = $items =
+$email = $userName = $password = $comments = $hashed_password= $checkboxValues="";
 
 $errorList = "";
 
@@ -90,15 +90,15 @@ $errorList = "";
             $hashed_password = md5($password);
             //var_dump($hashed_password);
     
-            if(!empty($_POST['email']))
+            if(!empty($_POST['input_email']))
             {
-                $email= filter_var($_POST['email'], FILTER_VALIDATE_EMAIL);
+                $email= filter_var($_POST['input_email'], FILTER_VALIDATE_EMAIL);
             }
             $purDate = $_POST['purDate'];
             $serNum = $_POST['serNum'];
             $itemPur = $_POST['itemPurchased'];
             
-            $username = $_POST['username'];
+            $userName = $_POST['input_username'];
             $comments = $_POST['comments'];
             if(!empty(is_array(($_POST['opSys']))))
             {
@@ -115,16 +115,22 @@ $errorList = "";
             }                    
      
         //insert the values into the database
-            
+        $roleID = rand(1,3);
+        $profileID = "SELECT profileID FROM userprofile WHERE firstname ='$fname'";   
         $sql = "INSERT INTO userprofile(firstname, lastname, profileID, address1, address2, city, state, zip, country,email)
         VALUES('$fname','$lname',NULL,'$address1','$address2','$city','$state','$zip','$country','$email')";
 
-        $userIns = "INSERT INTO user(userName, password, profileID) VALUES ('$username', '$hashed_password', NULL)";
-
-        $purchIns = "INSERT INTO purchasedetails(itemID, purchaseDate, serialNumber, itemUse, networkOS, profileID, comment)
-        VALUES(NULL,'$purDate','$serNum','$usedFor','$checkboxValues',NULL,'$comments')";
+        $userSql = "INSERT INTO user(userName, password, profileID, roleID) VALUES ('$userName', '$hashed_password', '$profileID', '$roleID')";
+                    //INSERT INTO `user` (`userName`, `password`, `profileID`, `roleID`) VALUES ('carriefish', 'afbgailu', '65', '3');
+        $purchSql = "INSERT INTO purchaseddetails(itemID, purchaseDate, serialNumber, itemUse, networkOS, profileID, comment)
+        VALUES(NULL,'$purDate','$serNum','$usedFor','$checkboxValues','$profileID','$comments')";
 
         if($con->query($sql) === TRUE){
+            $con->query($profileID);
+            $con->query($userSql);
+            //echo $userSql;
+            $con->query($purchSql);
+            echo $purchSql;
 			$to      = $email;
 			$subject = 'You made an account!';
 			$message = 'You have come this far, and still you understand nothing.';
@@ -136,7 +142,7 @@ $errorList = "";
 			echo "Email sent.";
 			//echo " {$em}";
         }
-        if($con->query($sql)===FALSE){
+        else{
             echo "Unsuccessful. Try again later.";
         }
         
@@ -145,10 +151,11 @@ $errorList = "";
 ?>
 <!DOCTYPE html>
 <html>
+<script src="//ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
 
 <script>
 $(document).ready(function(){
-   $("#txt_username").keyup(function(){
+   $("#input_username").keyup(function(){
       var username = $(this).val().trim();
       if(username != ''){
          $.ajax({
@@ -163,8 +170,24 @@ $(document).ready(function(){
          $("#user_check").html("");
       }
     });
+	
+	
+	$("#input_email").keyup(function(){
+      var email = $(this).val().trim();
+      if(email != ''){
+         $.ajax({
+            url: 'emailCheck.php',
+            type: 'post',
+            data: {email: email},
+            success: function(response){
+                $('#email_check').html(response);
+             }
+         });
+      }else{
+         $("#email_check").html("");
+      }
+    });
  });
-}
 </script>
 
 
@@ -197,7 +220,7 @@ $(document).ready(function(){
                 width:150px;
             }
 
-            div.loc {
+            .loc {
             position: relative;
             right: -240px;
             } 
@@ -325,20 +348,32 @@ $(document).ready(function(){
                     <input type="text" id="country" pattern="[A-Za-z\s]+"  name="country">
                     <hr>
                     <!--HTML for the second section with input text boxes-->
+                    
                     <label for=itemPurchased>Item Purchased</label>
-                    <select name="itemPurchased" id="itemPurchased" width="300" style="width: 120px" >
-                        <option value="one">Printer</option>
-                        <option value="two">Monitor</option>
-                        <option value="two">Creative Software</option>
-                        <option value="two">3D Printer</option>
+                    
+                    <?php 
+                        //<select name="itemPurchased" id="itemPurchased" width="300" style="width: 120px" >
+                        $items =  "SELECT itemName FROM products ORDER BY itemName";
+                        echo "<select name=itemPurchased value=''>Product</option>"; // list box select command
+                        foreach ($con->query($items) as $row){//Array or records stored in $row
+                        echo "<option value=$row[itemName]>$row[itemName]</option>"; 
+                        /* Option values are added by looping through the array */ }
+                        echo "</select>";
+                    ?>                        
                     </select>
 
                     <label for="purDate">Purchase Date</label>
                     <input type="date" id="purDate" name="purDate"><br><br>
+                    
 
-                    <div class="loc">
-                        <label for="serNum">Serial Number</label>
-                        <input type="text" id="serNum" name="serNum" pattern="[a-zA-z0-9]+" maxlength="20">
+                    <label for="serNum">Serial Number</label>
+                    <div class="loc">                        
+                        <?php
+                            $serNum = "SELECT serialNumber FROM products WHERE itemName='$itemPur'";
+                            //had to comment this line because if I put it in, half the form doesn't load. 
+                            //$con->query($serNum);
+                        ?>
+                       <input type='text' name='serNum' value="<?php echo $serNum['serialNumber']; ?>">                        
                     </div>
                     <hr>
 
@@ -380,10 +415,11 @@ $(document).ready(function(){
                     <br><br>
                     <div class="center">
                         <label for="email">Email Address</label>
-                        <input type="email" id="email" name="email" pattern="[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,}$"><br><br>
+                        <input type="email" id="input_email" name="input_email" pattern="[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,}$"><br><br>
+                        <div id="email_check" ></div>
 
                         <label for="username">Username</label>
-                        <input type="text" id="username" name="username" pattern="[a-zA-Z0-9]+" minlength="3" maxlength="15"><br><br>
+                        <input type="text" id="input_username" name="input_username" pattern="[a-zA-Z0-9]+" minlength="3" maxlength="15"><br><br>
                         <div id="user_check" ></div>
 						
                         <label for="password">Password</label>

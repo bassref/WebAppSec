@@ -20,9 +20,6 @@ else {
     $_SESSION['counter'] = 1;
 }
 
-
-
-
 ///////////////////////////////////////////////////////////////////////////////////////
 //assign the values from the form and validate
     if($_SERVER["REQUEST_METHOD"] == "POST")

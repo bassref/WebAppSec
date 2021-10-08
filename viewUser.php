@@ -2,7 +2,22 @@
     session_start();
     //page to show all users
     include "config.php";
-    $result = mysqli_query($con,"SELECT firstname, lastname, profileID FROM userprofile");
+    $profileID = $result = $roleID = $firstname = $lastname ="";
+
+    $profileID = $_SESSION['profileID'];
+    $roleID = $_SESSION['roleID'];
+    $firstname = $_SESSION['firstname'];
+    $lastname = $_SESSION['lastname'];
+    
+    if($profileID == 1){
+        $result = mysqli_query($con,"SELECT firstname, lastname FROM userprofile WHERE profileID ='$profileID' and roleID='1'");
+    }
+    else if ($profileID == 2){
+        $result = mysqli_query($con,"SELECT firstname, lastname FROM userprofile WHERE roleID='2'");
+    }
+    else if ($profileID == 3){
+        $result = mysqli_query($con,"SELECT firstname, lastname , profileID FROM userprofile");
+    }  
 
 ?>
 <!DOCTYPE html>
@@ -45,7 +60,9 @@
                         
                     </td>
                     <td>
+                    <?php if ($roleID = '3') { ?>
                         <button id="delButton" name="del" type="submit" value="<?php echo $row['profileID']; ?>">Delete</button>
+                    <?php } ?>
                     </td>
 					</form>
                 </tr>
